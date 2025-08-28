@@ -35,3 +35,5 @@ const deleteUserFromDb = inngest.createFunction(
 
 // ✅ Export the functions so the SDK can serve them
 export const functions = [syncUser, deleteUserFromDb];
+
+
