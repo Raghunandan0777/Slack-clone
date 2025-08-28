@@ -7,16 +7,21 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "server.js",
-    "start": "server.js"
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Build script completed'"
   },
   "dependencies": {
     "@clerk/express": "^1.7.24",
     "@sentry/node": "^10.5.0",
+    "@vercel/node": "^3.0.8",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "inngest": "^3.40.1",
     "mongoose": "^8.17.2"
+  },
+  "engines": {
+    "node": ">=14.x"
   }
 }
