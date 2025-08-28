@@ -10,23 +10,36 @@ const app = express();
 app.use(express.json());
 app.use(clerkMiddleware());
 
-app.use("/api/inngest", serve({ client: inngest, functions }));
+// Inngest v3-compatible handler
+app.use(
+  "/api/inngest",
+  serve({
+    client: inngest,
+    functions,
+  })
+);
 
 app.get("/", (req, res) => {
-  res.send("app is running");
+  res.send("App is running");
 });
 
-const startServer = async () => {
-  try {
-    await connectDB();
+// 🔑 Create a function to build the server
+export async function buildServer() {
+  await connectDB();
+  return app;
+}
 
-    app.listen(ENV.PORT, () => {
-      console.log("app is running on port:", ENV.PORT);
+// ✅ Export handler for Vercel
+export default async function handler(req, res) {
+  const builtApp = await buildServer();
+  return builtApp(req, res);
+}
+
+// ✅ Only run app.listen locally (not in Vercel)
+if (process.env.NODE_ENV !== "production") {
+  buildServer().then((builtApp) => {
+    builtApp.listen(ENV.PORT || 3000, () => {
+      console.log("App running on port:", ENV.PORT || 3000);
     });
-  } catch (error) {
-    console.error("Error starting server", error);
-    process.exit(1);
-  }
-};
-
-startServer();
+  });
+}
